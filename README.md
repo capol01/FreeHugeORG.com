@@ -3,44 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zadání Roblox údajů</title>
+    <title>Login Form</title>
 </head>
 <body>
-    <form id="robloxForm">
-        <label for="usernameInput">Roblox jméno:</label>
-        <input type="text" id="usernameInput" name="username"><br><br>
-
-        <label for="passwordInput">Roblox heslo:</label>
-        <input type="password" id="passwordInput" name="password"><br><br>
-
-        <input type="button" value="Odeslat" onclick="saveCredentials()">
+    <h2>Login Form</h2>
+    <form id="loginForm">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="submit" value="Submit">
     </form>
-
-    <div id="displayInfo"></div>
+    <p id="message"></p>
 
     <script>
-        function saveCredentials() {
-            var username = document.getElementById('usernameInput').value;
-            var password = document.getElementById('passwordInput').value;
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
 
-            localStorage.setItem('robloxUsername', username);
-            localStorage.setItem('robloxPassword', password);
+            // Fetch input values
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
 
-            displayInfo(); // Po uložení zavoláme funkci pro zobrazení informací
-        }
-
-        function displayInfo() {
-            var savedUsername = localStorage.getItem('robloxUsername');
-            var savedPassword = localStorage.getItem('robloxPassword');
-
-            if (savedUsername && savedPassword) {
-                document.getElementById('displayInfo').innerHTML = "<strong>Roblox jméno:</strong> " + savedUsername + "<br><strong>Roblox heslo:</strong> " + savedPassword;
+            // Basic validation
+            if (username === '' || password === '') {
+                document.getElementById('message').innerHTML = "Please enter both username and password.";
+                return;
             }
-        }
 
-        // Při načtení stránky se zobrazí uložené informace
+            // Store data in localStorage
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
+
+            // Display message
+            document.getElementById('message').innerHTML = "Your login data has been stored.";
+
+            // Reset form
+            document.getElementById('loginForm').reset();
+        });
+
+        // Load stored login data on page load
         window.onload = function() {
-            displayInfo();
+            var storedUsername = localStorage.getItem('username');
+            var storedPassword = localStorage.getItem('password');
+
+            if (storedUsername && storedPassword) {
+                document.getElementById('message').innerHTML = "Your stored login data:<br>";
+                document.getElementById('message').innerHTML += "Username: " + storedUsername + "<br>";
+                document.getElementById('message').innerHTML += "Password: " + storedPassword + "<br>";
+            }
         };
     </script>
 </body>
